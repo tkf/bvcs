@@ -103,8 +103,12 @@ class BaseRunner(object):
         parser.add_argument(
             'path', nargs='+',
             help='search for VCS repositories under these directories')
-        parser.set_defaults(func=self.run)
+        parser.set_defaults(func=self.run)  # used via `applyargs`
         return parser
+
+
+def applyargs(func, **kwds):
+    return func(**kwds)
 
 
 def command(cmds, *args, **kwds):
