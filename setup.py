@@ -5,7 +5,7 @@ setup(
     name='bvcs',
     version=bvcs.__version__,
     packages=['bvcs', 'bvcs.methods'],
-    description='BVCS',
+    description='Asynchronous VCS command runner',
     long_description=bvcs.__doc__,
     author=bvcs.__author__,
     author_email='aka.tkf@gmail.com',
