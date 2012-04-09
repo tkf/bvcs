@@ -88,8 +88,10 @@ class BaseRunner(object):
     def reporter(self, vcstype, path, result):
         raise NotImplementedError
 
-    def add_subparser(self, subpersers):
-        parser = subpersers.add_parser(self.cmdname)
+    def connect_subparser(self, subpersers):
+        return self.add_parser(subpersers.add_parser(self.cmdname))
+
+    def add_parser(self, parser):
         parser.add_argument(
             '-p', '--num-proc', metavar='N', type=int, default=1,
             help='number of processes to use. '

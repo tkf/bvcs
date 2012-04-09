@@ -11,7 +11,7 @@ def get_arg_parser(method_list):
 def add_subparsers(parser, method_list):
     subpersers = parser.add_subparsers()
     for method in method_list:
-        method().add_subparser(subpersers)
+        method().connect_subparser(subpersers)
 
 
 def applyargs(func, **kwds):
