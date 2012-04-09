@@ -54,7 +54,6 @@ class BaseRunner(object):
     """A string to indicate sub command name."""
 
     def __init__(self):
-        self.exitstatus = None
         self._check_dispatcher()
 
     def _check_dispatcher(self):
