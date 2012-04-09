@@ -46,8 +46,8 @@ def hg_apropos_out_command():
 
 def get_shortpath():
     try:
-        import uiquify.shortpath
-        return uiquify.shortpath
+        from uniquify import shortpath
+        return shortpath
     except ImportError:
         return lambda x: x
 
