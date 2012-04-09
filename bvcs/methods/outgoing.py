@@ -2,8 +2,22 @@ from bvcs.core import BaseRunner, command
 
 
 def hg_out(path):
+    (ret, stdout) = command(['hg', 'outgoing'], cwd=path)
+    out = ret == 0
+    return (out, stdout)
+
+
+def hg_out_cached(path):
     (ret, stdout) = command(['hg', 'cout'], cwd=path)
     out = ret == 0
+    return (out, stdout)
+
+
+def hg_out_phase(path):
+    (ret, stdout) = command(
+        ['hg', 'log', '--rev', 'draft()', '--template',
+         r'{node|short} {desc|firstline}\n'], cwd=path)
+    out = bool(stdout.strip())
     return (out, stdout)
 
 
@@ -20,6 +34,16 @@ def bzr_out(path):
     return (out, stdout)
 
 
+def hg_apropos_out_command():
+    (_unused_, hghelp) = command(['hg', 'help'])
+    if 'phase' in hghelp:
+        return hg_out_phase
+    elif 'cout' in hghelp:
+        return hg_out_cached
+    else:
+        return hg_out
+
+
 def get_shortpath():
     try:
         import uiquify.shortpath
@@ -32,6 +56,11 @@ class Outgoing(BaseRunner):
 
     cmdname = 'outgoing'
     dispatcher = {'hg': hg_out, 'git': git_out, 'bzr': bzr_out}
+
+    def __init__(self):
+        self.dispatcher = self.dispatcher.copy()
+        self.dispatcher['hg'] = hg_apropos_out_command()
+        super(Outgoing, self).__init__()
 
     def reporter(self, vcstypes, paths, results):
         names = get_shortpath()(paths)
