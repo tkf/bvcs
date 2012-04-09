@@ -90,6 +90,17 @@ class BaseRunner(object):
 
     def add_subparser(self, subpersers):
         parser = subpersers.add_parser(self.cmdname)
+        parser.add_argument(
+            '-p', '--num-proc', metavar='N', type=int, default=1,
+            help='number of processes to use. '
+            '0 means use as much as possible. (default: %(default)s)')
+        parser.add_argument(
+            '-X', '--exclude', default=[], action='append',
+            help='paths to exclude as regular expression. '
+            'this option can be given multiple times.')
+        parser.add_argument(
+            'path', nargs='+',
+            help='search for VCS repositories under these directories')
         parser.set_defaults(func=self.run)
         return parser
 
