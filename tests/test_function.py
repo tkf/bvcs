@@ -7,7 +7,7 @@ import shutil
 import tempfile
 
 from bvcs.utils import ras, mkdirp
-from bvcs.methods import init, clone
+from bvcs.methods import init, clone, commit
 
 
 TESTDIR = os.path.dirname(__file__)
@@ -93,6 +93,7 @@ class CheckFunctionWithInitBase(CheckFunctionBase):
         self.init.test()
         if self.use_same_basedir:
             self.basedir = self.init.basedir
+            self.paths = self.init.paths
 
     def tearDown(self):
         super(CheckFunctionWithInitBase, self).tearDown()
@@ -114,4 +115,23 @@ class TestClone(CheckFunctionWithInitBase):
 
     def modify_run_kwds(self, kwds):
         kwds.update(path=[], repo_file=self.make_repo_file())
+        return kwds
+
+
+class TestCommit(CheckFunctionWithInitBase):
+
+    use_same_basedir = True
+    make_runner = commit.Commit
+
+    def make_some_change(self):
+        for p in self.paths:
+            with open(os.path.join(p, 'README.txt'), 'w') as f:
+                f.write('This is a dummy file.')
+
+    def test(self):
+        self.make_some_change()
+        super(TestCommit, self).test()
+
+    def modify_run_kwds(self, kwds):
+        kwds['message'] = 'Commit message.'
         return kwds
