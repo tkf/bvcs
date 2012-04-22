@@ -1,4 +1,4 @@
-from bvcs.core import BaseRunner, command
+from bvcs.core import BaseRunnerWithState, command
 
 
 def hg_checkout(path, state):
@@ -19,7 +19,7 @@ def bzr_checkout(path, state):
     return (ret, stdout)
 
 
-class Checkout(BaseRunner):
+class Checkout(BaseRunnerWithState):
 
     cmdname = 'checkout'
     dispatcher = {'hg': hg_checkout, 'git': git_checkout, 'bzr': bzr_checkout}
@@ -32,16 +32,5 @@ class Checkout(BaseRunner):
         self.load_states(state_file)
         return super(Checkout, self).run(**kwds)
 
-    def load_states(self, state_file):
-        self.states = states = {}
-        with open(state_file) as state:
-            states.update(reversed(l.strip().split(' ', 1))
-                          for l in state.readlines())
-
     def reporter(self, vcstypes, paths, results):
         print 'Checked out {0} repositories'.format(len(paths))
-
-    def add_parser(self, parser):
-        parser = super(Checkout, self).add_parser(parser)
-        parser.add_argument('--state-file', default='.bvcsstate')
-        return parser

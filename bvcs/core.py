@@ -139,6 +139,33 @@ def applyargs(func, **kwds):
     return func(**kwds)
 
 
+class BaseRunnerWithState(BaseRunner):
+
+    @staticmethod
+    @ras(dict)
+    def parse_state_file_lines(lines):
+        return (reversed(l.strip().split(' ', 1)) for l in lines)
+
+    def load_states(self, state_file_path):
+        with open(state_file_path) as state_file:
+            self.states = self.parse_state_file_lines(state_file.readlines())
+
+    @staticmethod
+    def dump_states_file(state_file, paths, revs):
+        state_file.writelines(map('{0} {1}\n'.format, revs, paths))
+
+    def dump_states(self, state_file_path, paths, revs):
+        with open(state_file_path, 'w') as state_file:
+            self.dump_states_file(state_file, paths, revs)
+
+    def add_parser(self, parser):
+        parser = super(BaseRunnerWithState, self).add_parser(parser)
+        parser.add_argument(
+            '--state-file', default='.bvcsstate',
+            help='File to dump/load states (default: %(default)s)')
+        return parser
+
+
 def command(cmds, *args, **kwds):
     cmds = list(a for a in cmds if a)  # exclude empty string
     proc = subprocess.Popen(

@@ -1,4 +1,4 @@
-from bvcs.core import BaseRunner, command
+from bvcs.core import BaseRunnerWithState, command
 from bvcs.methods.identify import bzr_id
 
 
@@ -14,16 +14,10 @@ def git_dump_state(path):
     return stdout.splitlines()[0]
 
 
-class DumpState(BaseRunner):
+class DumpState(BaseRunnerWithState):
 
     cmdname = 'dump'
     dispatcher = {'hg': hg_dump_state, 'git': git_dump_state, 'bzr': bzr_id}
 
     def reporter(self, vcstypes, paths, results, state_file):
-        with open(state_file, 'w') as out:
-            out.writelines(map('{0} {1}\n'.format, results, paths))
-
-    def add_parser(self, parser):
-        parser = super(DumpState, self).add_parser(parser)
-        parser.add_argument('--state-file', default='.bvcsstate')
-        return parser
+        self.dump_states(state_file, paths, results)
