@@ -88,7 +88,7 @@ class BaseRunner(object):
                 'Functions in {0}.dispatcher must be pickle-able.'
                 .format(self.__class__.__name__))
 
-    def run(self, path, num_proc, exclude):
+    def run(self, path, num_proc, exclude, **kwds):
         if exclude:
             match_exclue = re.compile(joinre(exclude)).match
         else:
@@ -97,7 +97,7 @@ class BaseRunner(object):
             get_vcs_repos(filter(lambda x: not match_exclue(x), path)))
         (vcstypes, paths) = zip(*repos)
         results = self.mapper(vcstypes, paths, num_proc)
-        return self.reporter(vcstypes, paths, results)
+        return self.reporter(vcstypes, paths, results, **kwds)
 
     def get_arg(self, vcstype, path):
         return (self.dispatcher[vcstype], (path,), {})
