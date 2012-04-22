@@ -15,7 +15,9 @@ def git_id(path):
 
 
 def bzr_id(path):
-    (ret, stdout) = command(['bzr', 'revno'], cwd=path)
+    (ret, stdout) = command(
+        ['bzr', 'version-info', '--custom', '--template', '{revision_id}'],
+        cwd=path)
     return stdout.strip()
 
 

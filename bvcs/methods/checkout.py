@@ -15,7 +15,7 @@ def git_checkout(path, state):
 
 def bzr_checkout(path, state):
     (ret, stdout) = command(
-        ['bzr', 'checkout', '--revision', state], cwd=path)
+        ['bzr', 'update', '--revision', state], cwd=path)
     return (ret, stdout)
 
 

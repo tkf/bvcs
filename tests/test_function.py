@@ -7,7 +7,7 @@ import shutil
 import tempfile
 
 from bvcs.utils import ras, mkdirp
-from bvcs.methods import init, clone, commit, isclean
+from bvcs.methods import init, clone, commit, isclean, dumpstate, checkout
 
 
 TESTDIR = os.path.dirname(__file__)
@@ -127,8 +127,8 @@ class TestCommit(CheckFunctionWithInitBase):
 
     def make_some_change(self):
         for p in self.paths:
-            with open(os.path.join(p, 'README.txt'), 'w') as f:
-                f.write('This is a dummy file.')
+            with open(os.path.join(p, 'README.txt'), 'a') as f:
+                f.write('This is a dummy file.\n')
 
     def test(self):
         self.make_some_change()
@@ -140,3 +140,32 @@ class TestCommit(CheckFunctionWithInitBase):
     def modify_run_kwds(self, kwds):
         kwds['message'] = 'Commit message.'
         return kwds
+
+
+class TestDumpAndCheckout(TestCommit):
+
+    def test(self):
+        state_file_path = os.path.join(self.basedir, '.bvcsstate')
+        kwds = self.run_kwds_default()
+        kwds.update(state_file=state_file_path)
+        supertest = super(TestDumpAndCheckout, self).test
+
+        supertest()
+        dumpstate_runner_1 = dumpstate.DumpState()
+        dumpstate_runner_1.run(**kwds)
+        state1 = open(state_file_path).read()
+
+        supertest()
+        dumpstate_runner_2 = dumpstate.DumpState()
+        dumpstate_runner_2.run(**kwds)
+        state2 = open(state_file_path).read()
+        assert state1 != state2
+
+        open(state_file_path, 'w').write(state1)
+        checkout_runner = checkout.Checkout()
+        checkout_runner.run(**kwds)
+        dumpstate_runner_3 = dumpstate.DumpState()
+        dumpstate_runner_3.run(**kwds)
+        state3 = open(state_file_path).read()
+        assert state1 == state3
+        assert state2 != state3
