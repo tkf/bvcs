@@ -129,7 +129,7 @@ class BaseRunner(object):
             help='paths to exclude as regular expression. '
             'this option can be given multiple times.')
         parser.add_argument(
-            'path', nargs='+',
+            'path', nargs='*',
             help='search for VCS repositories under these directories')
         parser.set_defaults(func=self.run)  # used via `applyargs`
         return parser
