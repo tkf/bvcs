@@ -39,8 +39,11 @@ class CheckFunctionBase(object):
     def name(cls):
         return cls.__name__
 
-    def setUp(self):
-        self.tmpdir = tempfile.mkdtemp(dir=TESTTEMPDIR)
+    def setUp(self, tmpdir=None):
+        if tmpdir is None:
+            self.tmpdir = tempfile.mkdtemp(dir=TESTTEMPDIR)
+        else:
+            self.tmpdir = tmpdir
         self.basedir = os.path.join(self.tmpdir, self.name())
         mkdirp(self.basedir)
         lastdirs = map('{0}repo'.format, self.vcstypes)
@@ -79,19 +82,26 @@ class TestInit(CheckFunctionBase):
         return kwds
 
 
-class TestClone(CheckFunctionBase):
+class CheckFunctionWithInitBase(CheckFunctionBase):
 
-    make_runner = clone.Clone
+    use_same_basedir = False
 
     def setUp(self):
-        super(TestClone, self).setUp()
+        super(CheckFunctionWithInitBase, self).setUp()
         self.init = TestInit()
-        self.init.setUp()
+        self.init.setUp(tmpdir=self.tmpdir)
         self.init.test()
+        if self.use_same_basedir:
+            self.basedir = self.init.basedir
 
     def tearDown(self):
-        super(TestClone, self).tearDown()
+        super(CheckFunctionWithInitBase, self).tearDown()
         self.init.tearDown()
+
+
+class TestClone(CheckFunctionWithInitBase):
+
+    make_runner = clone.Clone
 
     def make_repo_file(self):
         repo_file = os.path.join(self.basedir, '.bvcsrepo')
