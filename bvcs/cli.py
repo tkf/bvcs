@@ -11,9 +11,9 @@ def get_parser(method_list):
 
 
 def run():
-    from bvcs.methods import METHOD_LIST
-    from bvcs.core import applyargs
-    parser = get_parser(METHOD_LIST)
+    import bvcs.methods  # this will register runners
+    from bvcs.core import applyargs, RUNNER
+    parser = get_parser(RUNNER.classes())
     args = parser.parse_args()
     status = applyargs(**vars(args))
     if status != 0:

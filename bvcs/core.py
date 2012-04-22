@@ -45,7 +45,30 @@ def joinre(regexs):
     return "|".join(map("({0})".format, regexs))
 
 
+class ClassRegister(object):
+
+    def __init__(self, key):
+
+        class ClassRegisterMetaClass(type):
+            def __init__(cls, name, bases, dict):
+                super(ClassRegisterMetaClass, cls).__init__(name, bases, dict)
+                val = getattr(cls, key, None)
+                if val is not None:
+                    registry.append((val, cls))
+
+        self.registry = registry = []
+        self.metaclass = ClassRegisterMetaClass
+
+    def classes(self):
+        return [c for (n, c) in self.registry]
+
+
+RUNNER = ClassRegister('cmdname')
+
+
 class BaseRunner(object):
+
+    __metaclass__ = RUNNER.metaclass
 
     dispatcher = None
     """A dictionary to map VCS name (hg/git/bzr) to pickle-able function."""
