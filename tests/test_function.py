@@ -4,6 +4,7 @@ Functional testing
 
 import os
 import shutil
+from contextlib import contextmanager
 
 from bvcs.utils import ras
 from bvcs.methods import init
@@ -34,11 +35,21 @@ def getrepopaths(testname, vcstypes=['hg', 'git', 'bzr']):
     return paths
 
 
-def test_init():
-    paths = getrepopaths('init')
+@contextmanager
+def checkrepos(paths):
     for p in paths:
         shutil.rmtree(os.path.dirname(p), ignore_errors=True)
-    runner = init.Init()
-    runner.run(path=paths, num_proc=1, exclude=[])
+    yield
     for p in paths:
         assert os.path.isdir(p)
+
+
+def check_runner(runnerclass, testname):
+    paths = getrepopaths(testname)
+    runner = runnerclass()
+    with checkrepos(paths):
+        runner.run(path=paths, num_proc=1, exclude=[])
+
+
+def test_init():
+    check_runner(init.Init, 'init')
