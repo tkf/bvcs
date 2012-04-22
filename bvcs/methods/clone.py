@@ -45,6 +45,8 @@ class Clone(BaseRunner):
         else:
             paths = list(self.reposettings)
         self.cwd = os.path.dirname(repo_file)
+        if not self.cwd:
+            self.cwd = None
         vcstypes = [self.reposettings[p][0] for p in paths]
         self.results = results = self.mapper(vcstypes, paths, num_proc)
         return self.reporter(vcstypes, paths, results, **kwds)
