@@ -22,7 +22,10 @@ def bzr_clone(path, url, cwd):
 @ras(dict)
 def parse_repo_file_lines(lines):
     for l in lines:
-        (path, vcstype, url) = l.strip().split(' ', 2)
+        l = l.strip()
+        if not l:
+            continue
+        (path, vcstype, url) = l.split(' ', 2)
         yield (path, (vcstype, url))
 
 
