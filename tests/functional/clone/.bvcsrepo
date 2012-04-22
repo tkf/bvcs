@@ -1,0 +1,3 @@
+hgrepo hg ../init/hgrepo
+gitrepo git ../init/gitrepo
+bzrrepo bzr ../init/bzrrepo

@@ -7,7 +7,7 @@ import shutil
 from contextlib import contextmanager
 
 from bvcs.utils import ras
-from bvcs.methods import init
+from bvcs.methods import init, clone
 
 
 TESTDIR = os.path.dirname(__file__)
@@ -44,12 +44,19 @@ def checkrepos(paths):
         assert os.path.isdir(p)
 
 
-def check_runner(runnerclass, testname):
-    paths = getrepopaths(testname)
-    runner = runnerclass()
-    with checkrepos(paths):
-        runner.run(path=paths, num_proc=1, exclude=[])
+def check_runner(runner, testname, path=None, num_proc=1, exclude=[], **kwds):
+    testpaths = getrepopaths(testname)
+    with checkrepos(testpaths):
+        path = testpaths if path is None else path
+        runner.run(path=path, num_proc=num_proc, exclude=exclude, **kwds)
 
 
 def test_init():
-    check_runner(init.Init, 'init')
+    check_runner(init.Init(), 'init')
+
+
+def test_clone():
+    test_init()
+    testname = 'clone'
+    repo_file = os.path.join(TESTDIR, 'functional', testname, '.bvcsrepo')
+    check_runner(clone.Clone(), testname, path=[], repo_file=repo_file)
