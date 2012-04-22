@@ -1,6 +1,7 @@
 import os
 
 from bvcs.core import BaseRunner, command
+from bvcs.utils import ras
 
 
 def hg_clone(path, url, cwd):
@@ -16,6 +17,13 @@ def git_clone(path, url, cwd):
 def bzr_clone(path, url, cwd):
     (ret, stdout) = command(['bzr', 'branch', url, path], cwd=cwd)
     return (ret, stdout)
+
+
+@ras(dict)
+def parse_repo_file_lines(lines):
+    for l in lines:
+        (path, vcstype, url) = l.strip().split(' ', 2)
+        yield (path, (vcstype, url))
 
 
 class Clone(BaseRunner):
@@ -39,11 +47,8 @@ class Clone(BaseRunner):
         return self.reporter(vcstypes, paths, results, **kwds)
 
     def load_reposettings(self, repo_file_path):
-        self.reposettings = reposettings = {}
         with open(repo_file_path) as repo_file:
-            for line in repo_file.readlines():
-                (path, vcstype, url) = line.strip().split(' ', 2)
-                reposettings[path] = (vcstype, url)
+            self.reposettings = parse_repo_file_lines(repo_file.readlines())
 
     def reporter(self, vcstypes, paths, results):
         print 'Cloned {0} repositories'.format(len(paths))
