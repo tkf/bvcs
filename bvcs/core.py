@@ -102,7 +102,7 @@ class BaseRunner(object):
     def run(self, path, num_proc, exclude, **kwds):
         repos = get_vcs_repos(self.filter_path(path, exclude))
         (vcstypes, paths) = zip(*repos)
-        results = self.mapper(vcstypes, paths, num_proc)
+        self.results = results = self.mapper(vcstypes, paths, num_proc)
         return self.reporter(vcstypes, paths, results, **kwds)
 
     def get_arg(self, vcstype, path):

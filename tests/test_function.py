@@ -68,8 +68,8 @@ class CheckFunctionBase(object):
         return kwds
 
     def test(self):
-        runner = self.make_runner()
-        runner.run(**self.run_kwds())
+        self.runner = self.make_runner()
+        self.runner.run(**self.run_kwds())
         for p in self.paths:
             assert os.path.isdir(p)
 

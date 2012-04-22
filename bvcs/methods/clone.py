@@ -46,7 +46,7 @@ class Clone(BaseRunner):
             paths = list(self.reposettings)
         self.cwd = os.path.dirname(repo_file)
         vcstypes = [self.reposettings[p][0] for p in paths]
-        results = self.mapper(vcstypes, paths, num_proc)
+        self.results = results = self.mapper(vcstypes, paths, num_proc)
         return self.reporter(vcstypes, paths, results, **kwds)
 
     def load_reposettings(self, repo_file_path):

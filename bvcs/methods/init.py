@@ -35,7 +35,7 @@ class Init(BaseRunner):
     def run(self, path, num_proc, exclude, **kwds):
         path = self.filter_path(path, exclude)
         (vcstypes, paths) = zip(*map(parse_repo_path, path))
-        results = self.mapper(vcstypes, paths, num_proc)
+        self.results = results = self.mapper(vcstypes, paths, num_proc)
         return self.reporter(vcstypes, paths, results, **kwds)
 
     def reporter(self, vcstypes, paths, results):
