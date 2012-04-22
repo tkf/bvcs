@@ -2,6 +2,8 @@ import os
 import re
 import subprocess
 
+from bvcs.utils import ras
+
 
 def apply3(a):
     # Note: function called via multiprocessing.Pool must be defined
@@ -27,6 +29,7 @@ def getpoolmap(num_proc):
         return map
 
 
+@ras(list)
 def get_vcs_repos(pathlist):
     for path in pathlist:
         for subpath in os.listdir(path):
@@ -97,7 +100,7 @@ class BaseRunner(object):
         return filter(lambda x: not match_exclue(x), path)
 
     def run(self, path, num_proc, exclude, **kwds):
-        repos = list(get_vcs_repos(self.filter_path(path, exclude)))
+        repos = get_vcs_repos(self.filter_path(path, exclude))
         (vcstypes, paths) = zip(*repos)
         results = self.mapper(vcstypes, paths, num_proc)
         return self.reporter(vcstypes, paths, results, **kwds)
