@@ -1,3 +1,4 @@
+import os
 import functools
 
 
@@ -41,3 +42,8 @@ def ras(converter):
         func.original = original
         return func
     return wrapper
+
+
+def mkdirp(path):
+    if not os.path.isdir(path):
+        os.makedirs(path)
