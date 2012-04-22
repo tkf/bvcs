@@ -29,6 +29,15 @@ def parse_repo_file_lines(lines):
         yield (path, (vcstype, url))
 
 
+@ras(list)
+def filter_existing(paths):
+    for p in paths:
+        if os.path.exists(p):
+            print "Path {0} exists (skipped).".format(p)
+        else:
+            yield p
+
+
 class Clone(BaseRunner):
 
     cmdname = 'clone'
@@ -44,6 +53,7 @@ class Clone(BaseRunner):
             paths = self.filter_path(path, exclude)
         else:
             paths = list(self.reposettings)
+        paths = filter_existing(paths)
         self.cwd = os.path.dirname(repo_file)
         if not self.cwd:
             self.cwd = None
