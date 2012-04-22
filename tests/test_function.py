@@ -7,7 +7,7 @@ import shutil
 import tempfile
 
 from bvcs.utils import ras, mkdirp
-from bvcs.methods import init, clone, commit
+from bvcs.methods import init, clone, commit, isclean
 
 
 TESTDIR = os.path.dirname(__file__)
@@ -58,9 +58,11 @@ class CheckFunctionBase(object):
     def make_runner(self):
         raise NotImplemented
 
+    def run_kwds_default(self):
+        return dict(path=self.paths, num_proc=1, exclude=[])
+
     def run_kwds(self):
-        kwds = dict(path=self.paths, num_proc=1, exclude=[])
-        return self.modify_run_kwds(kwds)
+        return self.modify_run_kwds(self.run_kwds_default())
 
     def modify_run_kwds(self, kwds):
         return kwds
@@ -130,7 +132,10 @@ class TestCommit(CheckFunctionWithInitBase):
 
     def test(self):
         self.make_some_change()
+        isclean_runner = isclean.IsClean()
+        assert not isclean_runner.run(**self.run_kwds_default())
         super(TestCommit, self).test()
+        assert isclean_runner.run(**self.run_kwds_default())
 
     def modify_run_kwds(self, kwds):
         kwds['message'] = 'Commit message.'

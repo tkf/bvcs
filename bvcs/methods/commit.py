@@ -14,9 +14,11 @@ def git_commit(path, message):
     (ret, stdout) = command(['git', 'ls-files', '--deleted'], cwd=path)
     if ret != 0:
         return (ret, stdout)
-    (ret, stdout) = command(['git', 'rm'] + stdout.splitlines(), cwd=path)
-    if ret != 0:
-        return (ret, stdout)
+    deleted = stdout.splitlines()
+    if deleted:
+        (ret, stdout) = command(['git', 'rm'] + deleted, cwd=path)
+        if ret != 0:
+            return (ret, stdout)
     (ret, stdout) = command(
         ['git', 'commit', '--message', message], cwd=path)
     return (ret, stdout)
