@@ -1,6 +1,8 @@
 import os
 import re
 import subprocess
+import signal
+import time
 
 from bvcs.utils import ras
 
@@ -24,7 +26,13 @@ def getpoolmap(num_proc):
     if num_proc > 1:
         from multiprocessing import Pool
         pool = Pool(processes=num_proc)
-        return pool.map
+
+        def pmap(*args, **kwds):
+            try:
+                return pool.map(*args, **kwds)
+            finally:
+                pool.terminate()
+        return pmap
     else:
         return map
 
@@ -166,9 +174,26 @@ class BaseRunnerWithState(BaseRunner):
         return parser
 
 
+class KeyboardInterruptError(Exception):
+    pass
+
+
 def command(cmds, *args, **kwds):
     cmds = list(a for a in cmds if a)  # exclude empty string
     proc = subprocess.Popen(
         cmds, *args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, **kwds)
-    ret = proc.wait()
+    try:
+        ret = proc.wait()
+    except KeyboardInterrupt:
+        raise KeyboardInterruptError
+        # See: http://stackoverflow.com/a/2561809/727827
+    finally:
+        if proc.returncode is None:
+            proc.send_signal(signal.SIGINT)
+            time.sleep(0.1)
+            if proc.poll() is None:
+                proc.terminate()
+                time.sleep(0.1)
+                if proc.poll() is None:
+                    proc.kill()
     return (ret, proc.stdout.read())
