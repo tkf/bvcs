@@ -32,6 +32,7 @@ def getpoolmap(num_proc):
                 return pool.map(*args, **kwds)
             finally:
                 pool.terminate()
+                pool.join()
         return pmap
     else:
         return map
