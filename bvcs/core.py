@@ -183,8 +183,9 @@ def command(cmds, *args, **kwds):
     cmds = list(a for a in cmds if a)  # exclude empty string
     proc = subprocess.Popen(
         cmds, *args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, **kwds)
+    stdoutdata = ''
     try:
-        ret = proc.wait()
+        (stdoutdata, stderrdata) = proc.communicate()
     except KeyboardInterrupt:
         raise KeyboardInterruptError
         # See: http://stackoverflow.com/a/2561809/727827
@@ -197,4 +198,4 @@ def command(cmds, *args, **kwds):
                 time.sleep(0.1)
                 if proc.poll() is None:
                     proc.kill()
-    return (ret, proc.stdout.read())
+    return (proc.returncode, stdoutdata)
