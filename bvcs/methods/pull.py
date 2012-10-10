@@ -9,10 +9,15 @@ def git_pull(path):
     return command(['git', 'fetch'], cwd=path)
 
 
+def bzr_pull(path):
+    # TODO: implement!
+    return True
+
+
 class Pull(BaseRunner):
 
     cmdname = 'pull'
-    dispatcher = {'hg': hg_pull, 'git': git_pull}
+    dispatcher = {'hg': hg_pull, 'git': git_pull, 'bzr': bzr_pull}
 
     def reporter(self, vcstypes, paths, results):
         for ((ret, stdout), path, vcstype) in zip(results, paths, vcstypes):

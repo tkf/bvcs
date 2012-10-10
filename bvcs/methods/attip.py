@@ -17,6 +17,11 @@ def git_attip(path):
     return False
 
 
+def bzr_attip(path):
+    # TODO: implement!
+    return True
+
+
 def get_shortpath():
     try:
         from uniquify import shortpath
@@ -28,7 +33,7 @@ def get_shortpath():
 class AtTip(BaseRunner):
 
     cmdname = 'attip'
-    dispatcher = {'hg': hg_attip, 'git': git_attip}
+    dispatcher = {'hg': hg_attip, 'git': git_attip, 'bzr': bzr_attip}
 
     def reporter(self, vcstypes, paths, results):
         names = get_shortpath()(paths)
