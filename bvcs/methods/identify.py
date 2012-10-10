@@ -23,6 +23,20 @@ def bzr_id(path):
 
 class Identify(BaseRunner):
 
+    """
+    Print human-friendly revision specifier for each repository.
+
+    This command runs one of the following commands::
+
+        hg id --num --id --branch --tags --bookmarks
+        git show --format=short
+        bzr version-info --custom --template {revision_id}
+
+    Use `dump` command to save revision of each repository in
+    program-friendly format.
+
+    """
+
     cmdname = 'identify'
     dispatcher = {'hg': hg_id, 'git': git_id, 'bzr': bzr_id}
 

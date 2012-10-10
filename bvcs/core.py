@@ -88,6 +88,10 @@ class BaseRunner(object):
     cmdname = None
     """A string to indicate sub command name."""
 
+    import argparse
+    formatter_class = argparse.RawDescriptionHelpFormatter
+    """Formatter class argument to be used for this subcommand."""
+
     def __init__(self):
         self._check_dispatcher()
 
@@ -126,7 +130,15 @@ class BaseRunner(object):
         raise NotImplementedError
 
     def connect_subparser(self, subpersers):
-        return self.add_parser(subpersers.add_parser(self.cmdname))
+        return self.add_parser(subpersers.add_parser(
+            self.cmdname,
+            formatter_class=self.formatter_class,
+            description=self.__description()))
+
+    @classmethod
+    def __description(cls):
+        import textwrap
+        return textwrap.dedent(cls.__doc__) if cls.__doc__ else None
 
     def add_parser(self, parser):
         parser.add_argument(
