@@ -7,6 +7,7 @@ setup(
     packages=['bvcs', 'bvcs.methods'],
     description='Asynchronous VCS command runner',
     long_description=bvcs.__doc__,
+    url='https://github.com/tkf/bvcs',
     author=bvcs.__author__,
     author_email='aka.tkf@gmail.com',
     keywords='vcs, version control system, Git, Mercurial, Bazaar',
