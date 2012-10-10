@@ -20,5 +20,5 @@ Use cases:
 # [[[end]]]
 
 __author__ = "Takafumi Arakaki"
-__version__ = '0.0.0.dev0'
+__version__ = "0.0.1.dev0"
 __license__ = "MIT License"
