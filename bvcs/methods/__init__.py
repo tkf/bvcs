@@ -7,3 +7,4 @@ import bvcs.methods.init
 import bvcs.methods.clone
 import bvcs.methods.commit
 import bvcs.methods.isclean
+import bvcs.methods.attip
