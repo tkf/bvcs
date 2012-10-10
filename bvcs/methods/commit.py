@@ -77,5 +77,7 @@ class Commit(BaseRunner):
 
     def add_parser(self, parser):
         parser = super(Commit, self).add_parser(parser)
-        parser.add_argument('--message', default='Auto-commit by BVCS')
+        parser.add_argument(
+            '--message', default='Auto-commit by BVCS',
+            help='Commit message (same for all repositories).')
         return parser

@@ -87,5 +87,7 @@ class Clone(BaseRunner):
 
     def add_parser(self, parser):
         parser = super(Clone, self).add_parser(parser)
-        parser.add_argument('--repo-file', default='.bvcsrepo')
+        parser.add_argument(
+            '--repo-file', default='.bvcsrepo',
+            help='file to specify repositories to clone.')
         return parser
