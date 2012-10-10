@@ -16,6 +16,18 @@ def bzr_pull(path):
 
 class Pull(BaseRunner):
 
+    """
+    Pull changes from remote server (but don't change the local branch).
+
+    It runs one of the following commands in each repositories::
+
+        hg pull
+        git fetch
+
+    .. warning:: bzr command is not implemented yet!
+
+    """
+
     cmdname = 'pull'
     dispatcher = {'hg': hg_pull, 'git': git_pull, 'bzr': bzr_pull}
 

@@ -21,6 +21,16 @@ def bzr_checkout(path, state):
 
 class Checkout(BaseRunnerWithState):
 
+    """
+    Run checkout/update for each repository.
+
+    Checkout to the state saved in the ``.bvcsstate`` file in the
+    current This file can be specified explicitly by the
+    `--state-file` option.  Use `dump` command to save the state
+    (i.e., "freeze") of the current repositories.
+
+    """
+
     cmdname = 'checkout'
     dispatcher = {'hg': hg_checkout, 'git': git_checkout, 'bzr': bzr_checkout}
 

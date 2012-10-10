@@ -40,6 +40,23 @@ def filter_existing(paths):
 
 class Clone(BaseRunner):
 
+    """
+    Clone repositories given a list of repositories to pull.
+
+    The list of repositories are given by ``.bvcsrepo`` file at
+    current directory.  You can specify it by ``--repo-file`` option.
+    ``.bvcsrepo`` file must follow the following format::
+
+        REPO_PATH REPO_TYPE REPO_URL
+
+    For example::
+
+        subrepos/bvcs     git   git://github.com/tkf/bvcs.git
+        subrepos/buildlet git   git://github.com/tkf/buildlet.git
+        subrepos/cout     hg  https://bitbucket.org/tkf/hgcachedoutgoing
+
+    """
+
     cmdname = 'clone'
     dispatcher = {'hg': hg_clone, 'git': git_clone, 'bzr': bzr_clone}
 

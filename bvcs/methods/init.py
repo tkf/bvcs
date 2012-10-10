@@ -29,6 +29,15 @@ def parse_repo_path(path):
 
 class Init(BaseRunner):
 
+    """
+    Initialize Hg/Git/Bzr repositories.
+
+    Example::
+
+        bvcs init bitbuckt/.hg github/.git launchpad/.bzr
+
+    """
+
     cmdname = 'init'
     dispatcher = {'hg': hg_init, 'git': git_init, 'bzr': bzr_init}
 

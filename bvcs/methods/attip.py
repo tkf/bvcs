@@ -32,6 +32,16 @@ def get_shortpath():
 
 class AtTip(BaseRunner):
 
+    """
+    Print a list of repository which is not at tip of the branch.
+
+    This means that you pullled some changes from remote repository
+    but not yet updated the local branch.
+
+    .. warning:: bzr command is not implemented yet!
+
+    """
+
     cmdname = 'attip'
     dispatcher = {'hg': hg_attip, 'git': git_attip, 'bzr': bzr_attip}
 

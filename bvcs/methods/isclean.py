@@ -26,6 +26,17 @@ def bzr_isclean(path):
 
 class IsClean(BaseRunner):
 
+    """
+    Test if the working directory of all repositories are clean or not.
+
+    This command runs one of the following commands in each repository::
+
+        hg status
+        git status --short
+        bzr status --short
+
+    """
+
     cmdname = 'isclean'
     dispatcher = {'hg': hg_isclean, 'git': git_isclean, 'bzr': bzr_isclean}
 

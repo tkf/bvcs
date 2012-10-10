@@ -38,6 +38,29 @@ def bzr_commit(path, message):
 
 class Commit(BaseRunner):
 
+    """
+    Commit the current working directories.
+
+    It runs one of the following commands in each repositories.
+
+    For Mercurial repositoreis
+
+        hg commit --addremove --message MESSAGE
+
+    For Git repositoreis::
+
+        git add .
+        git rm DELETE_FILES  # if needed
+        git commit --message MESSAGE
+
+    For Bzr repositoreis::
+
+        bzr add
+        bzr remove
+        bzr commit --message MESSAGE
+
+    """
+
     cmdname = 'commit'
     dispatcher = {'hg': hg_commit, 'git': git_commit, 'bzr': bzr_commit}
 

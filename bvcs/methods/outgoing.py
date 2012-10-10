@@ -54,6 +54,17 @@ def get_shortpath():
 
 class Outgoing(BaseRunner):
 
+    """
+    Check if you have something to push.
+
+    This command does not communicate with remote server.  It checks
+    if the state of the remote branch remembered by the local
+    repository and compares it to the current state of the local
+    branch.  If the local branch has something new, this commands
+    report that you have something to push.
+
+    """
+
     cmdname = 'outgoing'
     dispatcher = {'hg': hg_out, 'git': git_out, 'bzr': bzr_out}
 
