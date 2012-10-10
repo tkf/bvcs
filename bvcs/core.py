@@ -74,6 +74,9 @@ class ClassRegister(object):
     def classes(self):
         return [c for (n, c) in self.registry]
 
+    def keys(self):
+        return [n for (n, c) in self.registry]
+
 
 RUNNER = ClassRegister('cmdname')
 
