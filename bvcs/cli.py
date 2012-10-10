@@ -3,7 +3,9 @@
 
 def get_parser(method_list):
     from argparse import ArgumentParser
-    parser = ArgumentParser()
+    parser = ArgumentParser(
+        prog='bvcs',
+    )
     subpersers = parser.add_subparsers()
     for method in method_list:
         method().connect_subparser(subpersers)
